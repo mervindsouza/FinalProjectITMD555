@@ -9,4 +9,5 @@
     <string name="create_account_button">CREATE ACCOUNT</string>
     <string name="sign_out_button">SIGN OUT</string>
     <string name="verify_email_button">VERIFY EMAIL</string>
+    <string name="authentication_failed">Authentication Failed</string>
 </resources>
