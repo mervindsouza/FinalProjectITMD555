@@ -3,6 +3,7 @@ package mdsouza5.finalprojectitmd555;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                             updateUI(null);
                         }
 
-                        if(!task.isSuccessful()){
+                        if (!task.isSuccessful()) {
                             fpStatusTextView.setText(R.string.authentication_failed);
                         }
 
@@ -117,8 +118,58 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void SignOut(){
+    private void SignOut() {
         fpFirebaseAuth.signOut();
         updateUI(null);
+    }
+
+    private void SendEmailVerificationToUser() {
+        // Disable the button initially
+        findViewById(R.id.verify_email_button).setEnabled(false);
+
+        // Prepare to send Verification Email
+        final FirebaseUser fpFirebaseUser = fpFirebaseAuth.getCurrentUser();
+        fpFirebaseUser.sendEmailVerification()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // Re Enable the Button to request verification email
+                        findViewById(R.id.verify_email_button).setEnabled(true);
+
+                        if (task.isSuccessful()) {
+                            Toast.makeText(MainActivity.this, "Verification Email Send To: " + fpFirebaseUser.getEmail(), Toast.LENGTH_LONG).show();
+                        } else {
+                            Log.e(LOGTAG, "SendEmailVerificationToUser:failure", task.getException());
+                            Toast.makeText(MainActivity.this, "Verification Email Not Send.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private boolean ValidateForm() {
+        boolean isValidForm = true;
+
+        // Check Validity of Email
+        String fpEmail = fpEmailField.getText().toString();
+        if (TextUtils.isEmpty(fpEmail)) {
+            fpEmailField.setError("Email Required.");
+            isValidForm = false;
+        } else {
+            fpEmailField.setError(null);
+        }
+
+        // Check Validity of Password
+        String fpPassword = fpPasswordField.getText().toString();
+        if (TextUtils.isEmpty(fpPassword)) {
+            fpPasswordField.setError("Password Required.");
+            isValidForm = false;
+        } else {
+            fpPasswordField.setError(null);
+        }
+        return isValidForm;
+    }
+
+    private void updateUI(FirebaseUser fpFirebaseUser) {
+
     }
 }
