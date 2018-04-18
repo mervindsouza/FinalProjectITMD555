@@ -3,4 +3,10 @@
     <string name="desc_firebase_lockup">Firebase logo and name</string>
     <string name="mainactivity_signin_text">Sign In Here to Begin</string>
     <string name="mainactivity_signedout_text">Signed Out Successfully</string>
+    <string name="email_hint_text">Email</string>
+    <string name="password_hint_text">Password</string>
+    <string name="sign_in_button">SIGN IN</string>
+    <string name="create_account_button">CREATE ACCOUNT</string>
+    <string name="sign_out_button">SIGN OUT</string>
+    <string name="verify_email_button">VERIFY EMAIL</string>
 </resources>
