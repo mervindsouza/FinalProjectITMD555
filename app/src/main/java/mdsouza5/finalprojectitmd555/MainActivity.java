@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,7 +16,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String LOGTAG = "EmailPasswordAuth";
 
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        ShowProgressDialog();
+        //ShowProgressDialog();
 
         // Create User For Firebase
         fpFirebaseAuth.createUserWithEmailAndPassword(fpUserEmail, fpUserPassword)
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             //Sign in is unsuccessful and Toast Error Shown to User
                             Log.w(LOGTAG, "createUserWithEmail:failed", task.getException());
-                            Toast.makeText(MainActivity.this, "User Authentication Failed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "User Authentication Failed.", Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }
                     }
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             //Sign in is unsuccessful and Toast Error Shown to User
                             Log.w(LOGTAG, "signInWithEmail:failure");
-                            Toast.makeText(MainActivity.this, "User Authntication Failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Authentication Failed.", Toast.LENGTH_LONG).show();
                             updateUI(null);
                         }
 
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                             fpStatusTextView.setText(R.string.authentication_failed);
                         }
 
-                        hideProgressDialog();
+                        //hideProgressDialog();
                     }
                 });
     }
@@ -137,10 +138,10 @@ public class MainActivity extends AppCompatActivity {
                         findViewById(R.id.verify_email_button).setEnabled(true);
 
                         if (task.isSuccessful()) {
-                            Toast.makeText(MainActivity.this, "Verification Email Send To: " + fpFirebaseUser.getEmail(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Verification Email Send To: " + fpFirebaseUser.getEmail(), Toast.LENGTH_LONG).show();
                         } else {
                             Log.e(LOGTAG, "SendEmailVerificationToUser:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Verification Email Not Send.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Verification Email Not Send.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -170,6 +171,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUI(FirebaseUser fpFirebaseUser) {
+        //hideProgressDialog();
+        if (fpFirebaseUser != null) {
+            fpStatusTextView.setText(getString(R.string.firebase_status_fmt, fpFirebaseUser.getUid()));
 
+            findViewById(R.id.email_and_pwd_buttons).setVisibility(View.GONE);
+            findViewById(R.id.email_and_pwd_fields).setVisibility(View.GONE);
+            findViewById(R.id.signed_in_buttons).setVisibility(View.VISIBLE);
+            findViewById(R.id.verify_email_button).setEnabled(!fpFirebaseUser.isEmailVerified());
+        } else {
+            findViewById(R.id.email_and_pwd_buttons).setVisibility(View.VISIBLE);
+            findViewById(R.id.email_and_pwd_fields).setVisibility(View.VISIBLE);
+            findViewById(R.id.signed_in_buttons).setVisibility(View.GONE);
+        }
+    }
+
+    public void onClick(View v) {
+        int j = v.getId();
+        if (j == R.id.create_account_email_button) {
+            CreateAccountForUsers(fpEmailField.getText().toString(), fpPasswordField.getText().toString());
+        } else if (j == R.id.sign_in_email_button) {
+            SignIn(fpEmailField.getText().toString(), fpPasswordField.getText().toString());
+        } else if (j == R.id.sign_out_button) {
+            SignOut();
+        } else if (j == R.id.verify_email_button) {
+            SendEmailVerificationToUser();
+        }
     }
 }
