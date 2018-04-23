@@ -6,4 +6,7 @@
     <dimen name="bottom_margin_icon">24dp</dimen>
     <dimen name="bottom_margin_title">16dp</dimen>
     <dimen name="field_width_std">160dp</dimen>
+    <dimen name="five_dp_padding">5dp</dimen>
+    <dimen name="ten_dp_padding">10dp</dimen>
+    <dimen name="thritytwo_dp_wh">32dp</dimen>
 </resources>
