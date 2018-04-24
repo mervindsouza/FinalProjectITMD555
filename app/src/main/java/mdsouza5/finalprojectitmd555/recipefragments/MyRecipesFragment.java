@@ -7,7 +7,7 @@ public class MyRecipesFragment extends RecipeListFragment {
     public MyRecipesFragment() {
     }
 
-//    public Query GetQuery(DatabaseReference fpDatabaseReference){
-//        return fpDatabaseReference.child("user-recipes").child(get());
-//    }
+    public Query GetQuery(DatabaseReference fpDatabaseReference){
+        return fpDatabaseReference.child("user-recipes").child(getQuery());
+    }
 }

@@ -5,11 +5,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.database.R;
-
 import mdsouza5.finalprojectitmd555.models.Recipes;
 
-public class RecipieViewHolder extends RecyclerView.ViewHolder {
+public class RecipeViewHolder extends RecyclerView.ViewHolder {
 
     public TextView recipeTitleTextView;
     public TextView recipeAuthorTextView;
@@ -17,7 +15,7 @@ public class RecipieViewHolder extends RecyclerView.ViewHolder {
     public TextView recipeStarCountTextView;
     public TextView recipeBodyTextView;
 
-    public RecipieViewHolder(View itemView) {
+    public RecipeViewHolder(View itemView) {
         super(itemView);
 
         //Insert findViewById
@@ -28,8 +26,8 @@ public class RecipieViewHolder extends RecyclerView.ViewHolder {
         //recipeBodyTextView = itemView.findViewById();
     }
 
-    //Binding RecipieViewHolder to Recipe Model
-    public void BindingToRecipie(Recipes recipeObj, View.OnClickListener starsClickListener) {
+    //Binding RecipeViewHolder to Recipe Model
+    public void BindingToRecipe(Recipes recipeObj, View.OnClickListener starsClickListener) {
         recipeTitleTextView.setText(recipeObj.recipeTitle);
         recipeAuthorTextView.setText(recipeObj.recipeAuthor);
         recipeStarCountTextView.setText(String.valueOf(recipeObj.starredRecipesCount));
