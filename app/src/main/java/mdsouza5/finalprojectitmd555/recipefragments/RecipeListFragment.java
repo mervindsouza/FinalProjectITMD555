@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,18 +109,48 @@ public abstract class RecipeListFragment extends Fragment {
     }
 
     // Star Clicked Event to check the occurance of the database transaction
-    private void onStarClickedByUser(DatabaseReference recipeReference){
+    private void onStarClickedByUser(DatabaseReference recipeReference) {
         recipeReference.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
-                return null;
+                Recipes recipesObj = mutableData.getValue(Recipes.class);
+                if (recipesObj == null) {
+                    return Transaction.success(mutableData);
+                }
+
+                if (recipesObj.starsForRecipes.containsKey(GetUid())) {
+                    recipesObj.starredRecipesCount -= recipesObj.starredRecipesCount;
+                    recipesObj.starsForRecipes.remove(GetUid());
+                } else {
+                    recipesObj.starredRecipesCount += recipesObj.starredRecipesCount;
+                    recipesObj.starsForRecipes.put(GetUid(), true);
+                }
+
+                mutableData.setValue(recipesObj);
+                return Transaction.success(mutableData);
             }
 
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-
+                Log.d(LOGTAG, "recipeTransaction:onComplete" + databaseError);
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(fpAdapter!=null){
+            fpAdapter.startListening();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(fpAdapter!=null){
+            fpAdapter.stopListening();
+        }
     }
 
     public abstract Query getQuery(DatabaseReference databaseReference);
