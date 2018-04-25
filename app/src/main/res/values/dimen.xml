@@ -9,4 +9,5 @@
     <dimen name="five_dp_padding">5dp</dimen>
     <dimen name="ten_dp_padding">10dp</dimen>
     <dimen name="thritytwo_dp_wh">32dp</dimen>
+    <dimen name="sixteen_dp_margin">16dp</dimen>
 </resources>
