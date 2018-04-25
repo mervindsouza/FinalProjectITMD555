@@ -62,7 +62,7 @@ public abstract class RecipeListFragment extends Fragment {
         fpLinearLayoutManager.setStackFromEnd(true);
         fpRecycler.setLayoutManager(fpLinearLayoutManager);
 
-        Query recipeQuery = getQuery(fpDatabase);
+        Query recipeQuery = GetQuery(fpDatabase);
 
         FirebaseRecyclerOptions fpOptions = new FirebaseRecyclerOptions.Builder<Recipes>().setQuery(recipeQuery, Recipes.class).build();
 
@@ -153,7 +153,7 @@ public abstract class RecipeListFragment extends Fragment {
         }
     }
 
-    public abstract Query getQuery(DatabaseReference databaseReference);
+    public abstract Query GetQuery(DatabaseReference databaseReference);
 
     public String GetUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();

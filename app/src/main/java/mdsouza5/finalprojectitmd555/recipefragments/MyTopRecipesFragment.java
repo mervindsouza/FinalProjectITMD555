@@ -5,7 +5,7 @@ import com.google.firebase.database.Query;
 
 public class MyTopRecipesFragment extends RecipeListFragment {
     @Override
-    public Query getQuery(DatabaseReference databaseReference) {
+    public Query GetQuery(DatabaseReference databaseReference) {
         return null;
     }
 }
