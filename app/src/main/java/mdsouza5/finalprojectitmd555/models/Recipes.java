@@ -27,7 +27,7 @@ public class Recipes {
 
     //Map Recipes to a HashMap
     @Exclude
-    public Map<String, Object> getStarsForRecipes() {
+    public Map<String, Object> ToMap() {
         HashMap<String, Object> stars = new HashMap<>();
         stars.put("userId", userId);
         stars.put("recipeAuthor", recipeAuthor);
