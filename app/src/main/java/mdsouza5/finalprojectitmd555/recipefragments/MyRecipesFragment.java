@@ -9,6 +9,6 @@ public class MyRecipesFragment extends RecipeListFragment {
 
     @Override
     public Query GetQuery(DatabaseReference databaseReference) {
-        return null;
+        return databaseReference.child("user-recipes").child(GetUid());
     }
 }
