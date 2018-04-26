@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +28,8 @@ public class NewRecipeActivity extends BaseActivity {
     private static final String REQUIRED_FIELD = "Required";
 
     private DatabaseReference fpDatabaseReference;
+
+    private FirebaseAuth firebaseAuth;
 
     private EditText fpRecipeTitleField;
     private EditText fpRecipeBodyField;
@@ -49,7 +52,6 @@ public class NewRecipeActivity extends BaseActivity {
                 SubmitRecipe();
             }
         });
-
     }
 
     private void SubmitRecipe() {
@@ -69,7 +71,8 @@ public class NewRecipeActivity extends BaseActivity {
         SetEditingEnabled(false);
         Toast.makeText(this, "Adding Your Recipe...", Toast.LENGTH_SHORT).show();
 
-        final String userId = GetFirebaseUserId();
+        //final String userId = GetFirebaseUserId();
+        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         fpDatabaseReference.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -79,7 +82,7 @@ public class NewRecipeActivity extends BaseActivity {
                     Log.e(LOGTAG, "User " + userId + " is surprisingly null.");
                     Toast.makeText(NewRecipeActivity.this, "Error: Couldn't Fetch User", Toast.LENGTH_SHORT).show();
                 } else {
-                    WriteNewRecipe(userId, user.userName, recipeTitle, recipeBody);
+                   WriteNewRecipe(userId, user.userName, recipeTitle, recipeBody);
                 }
 
                 SetEditingEnabled(true);
@@ -110,12 +113,11 @@ public class NewRecipeActivity extends BaseActivity {
         // /recipes/$recipeid simultaneously
         String key = fpDatabaseReference.child("recipes").push().getKey();
         Recipes recipe = new Recipes(userId, userName, recipeTitle, recipeBody);
-
         Map<String, Object> recipeValues = recipe.ToMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/users/" + key, recipeValues);
-        childUpdates.put("user-recipes/" + userId + "/" + key, recipeValues);
+        childUpdates.put("/recipes/" + key, recipeValues);
+        childUpdates.put("/user-recipes/" + userId + "/" + key, recipeValues);
 
         fpDatabaseReference.updateChildren(childUpdates);
     }

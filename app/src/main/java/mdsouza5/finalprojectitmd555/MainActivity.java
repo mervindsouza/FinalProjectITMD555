@@ -1,5 +1,6 @@
 package mdsouza5.finalprojectitmd555;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import mdsouza5.finalprojectitmd555.models.User;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -28,6 +33,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Declare Firebase Auth
     private FirebaseAuth fpFirebaseAuth;
+
+    //Declare Firebase Database
+    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //updateUI(fpCurrentUser);
     }
 
-    private void CreateAccountForUsers(String fpUserEmail, String fpUserPassword) {
+    private void CreateAccountForUsers(final String fpUserEmail, String fpUserPassword) {
         Log.d(LOGTAG, "CreateAccount:" + fpUserEmail);
         if (!ValidateForm()) {
             return;
@@ -76,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             //Sign in is successful and Users details can be shown.
                             Log.d(LOGTAG, "createUserWithEmail:success");
                             FirebaseUser fpFirebaseUser = fpFirebaseAuth.getCurrentUser();
+                            writeNewUser(fpFirebaseUser.getUid().toString(), "test name", fpUserEmail);
                             updateUI(fpFirebaseUser);
                         } else {
                             //Sign in is unsuccessful and Toast Error Shown to User
@@ -114,7 +123,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             fpStatusTextView.setText(R.string.authentication_failed);
                         }
 
-                        //hideProgressDialog();
+                        if(fpFirebaseAuth.getCurrentUser().isEmailVerified()){
+                            startActivity(new Intent(MainActivity.this, ShowPagesActivity.class));
+                        }else{
+                            Toast.makeText(getApplicationContext(), "Email Isn't Verified.", Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
     }
@@ -174,7 +187,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //hideProgressDialog();
         if (fpFirebaseUser != null) {
             fpStatusTextView.setText(getString(R.string.firebase_status_fmt, fpFirebaseUser.getUid()));
-
             findViewById(R.id.email_and_pwd_buttons).setVisibility(View.GONE);
             findViewById(R.id.email_and_pwd_fields).setVisibility(View.GONE);
             findViewById(R.id.signed_in_buttons).setVisibility(View.VISIBLE);
@@ -197,5 +209,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (j == R.id.verify_email_button) {
             SendEmailVerificationToUser();
         }
+    }
+
+    private void writeNewUser(String userId, String name, String email) {
+        User user = new User(name, email);
+
+        databaseReference.child("users").child(userId).setValue(user);
     }
 }

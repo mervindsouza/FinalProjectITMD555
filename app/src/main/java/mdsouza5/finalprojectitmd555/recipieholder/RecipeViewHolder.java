@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import mdsouza5.finalprojectitmd555.R;
 import mdsouza5.finalprojectitmd555.models.Recipes;
 
 public class RecipeViewHolder extends RecyclerView.ViewHolder {
@@ -19,11 +20,11 @@ public class RecipeViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
 
         //Insert findViewById
-        //recipeTitleTextView = itemView.findViewById();
-        //recipeAuthorTextView = itemView.findViewById();
-        //recipeStarsImageView = itemView.findViewById();
-        //recipeStarCountTextView = itemView.findViewById();
-        //recipeBodyTextView = itemView.findViewById();
+        recipeTitleTextView = itemView.findViewById(R.id.recipe_title);
+        recipeAuthorTextView = itemView.findViewById(R.id.recipe_author);
+        recipeStarsImageView = itemView.findViewById(R.id.stars);
+        recipeStarCountTextView = itemView.findViewById(R.id.number_of_stars);
+        recipeBodyTextView = itemView.findViewById(R.id.recipe_body);
     }
 
     //Binding RecipeViewHolder to Recipe Model
