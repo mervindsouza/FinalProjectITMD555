@@ -1,13 +1,17 @@
 package mdsouza5.finalprojectitmd555;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,12 +19,15 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import mdsouza5.finalprojectitmd555.models.Comment;
+import mdsouza5.finalprojectitmd555.models.Recipes;
+import mdsouza5.finalprojectitmd555.models.User;
 
 public class RecipeDetailActivity extends BaseActivity implements View.OnClickListener {
 
@@ -29,14 +36,107 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
 
     private DatabaseReference fpDBReferenceForRecipe;
     private DatabaseReference fpDBReferenceForComments;
-    private ValueEventListener fpRecipeListner;
+    private ValueEventListener fpRecipeListener;
     private String fpRecipeKey;
     private CommentAdapter fpCommentAdapter;
 
+    private TextView fpAuthorView;
+    private TextView fpTitleView;
+    private TextView fpBodyView;
+    private EditText fpCommentField;
+    private Button fpCommentButton;
+    private RecyclerView fpCommentsRecycler;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_recipe_detail);
+
+        fpRecipeKey = getIntent().getStringExtra(EXTRA_RECIPE_KEY);
+        if(fpRecipeKey == null){
+            throw new IllegalArgumentException("EXTRA_RECIPE_KEY Must be passed.");
+        }
+
+        fpDBReferenceForRecipe = FirebaseDatabase.getInstance().getReference().child("recipes").child("fpRecipeKey");
+        fpDBReferenceForComments = FirebaseDatabase.getInstance().getReference().child("recipe-comments").child("fpRecipeKey");
+
+        fpAuthorView = findViewById(R.id.recipe_comment_author);
+        fpTitleView = findViewById(R.id.recipe_title);
+        fpBodyView = findViewById(R.id.recipe_body);
+        fpCommentField = findViewById(R.id.field_recipe_comment);
+        fpCommentButton = findViewById(R.id.button_recipe_comment);
+        fpCommentsRecycler = findViewById(R.id.recycler_recipe_comments);
+
+        fpCommentButton.setOnClickListener(this);
+        fpCommentsRecycler.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Adding value to the event listener
+        ValueEventListener recipeValueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get the Recipe Object and update UI based on values
+                Recipes recipe = dataSnapshot.getValue(Recipes.class);
+                fpAuthorView.setText(recipe.recipeAuthor);
+                fpTitleView.setText(recipe.recipeTitle);
+                fpBodyView.setText(recipe.recipeBody);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // If recipe isn't obtained, Log a error message
+                Log.w(LOGTAG,"loadRecipe:onCancelled", databaseError.toException());
+                Toast.makeText(RecipeDetailActivity.this, "Failed To Load Recipe. Try Later.", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        fpDBReferenceForRecipe.addValueEventListener(recipeValueEventListener);
+        fpRecipeListener = recipeValueEventListener;
+
+        fpCommentAdapter = new CommentAdapter(this, fpDBReferenceForComments);
+        fpCommentsRecycler.setAdapter(fpCommentAdapter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(fpRecipeListener!=null){
+            fpDBReferenceForRecipe.removeEventListener(fpRecipeListener);
+        }
+
+        fpCommentAdapter.CleanupListener();
+    }
 
     @Override
     public void onClick(View v) {
+        int k = v.getId();
+        if(k == R.id.button_recipe_comment){
+            PostComment();
+        }
+    }
 
+    private void PostComment(){
+        final String userId = GetFirebaseUserId();
+        FirebaseDatabase.getInstance().getReference().child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                String authorName = user.userName;
+
+                // Commment create object
+                String commentText = fpCommentField.getText().toString();
+                Comment comment = new Comment(userId, authorName, commentText);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
@@ -141,9 +241,8 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
         }
 
         @Override
-        public void onBindViewHolder(@NonNull CommentAdapter holder, int position) {
+        public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
             Comment comment = fpComments.get(position);
-            holder.
         }
 
         @Override
@@ -151,7 +250,7 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
             return fpComments.size();
         }
 
-        public void CleanupListner() {
+        public void CleanupListener() {
             if (fpChildEventListener != null) {
                 fpDatabaseReference.removeEventListener(fpChildEventListener);
             }
