@@ -2,6 +2,9 @@
   <dictionary name="mdsouza">
     <words>
       <w>firebase</w>
+      <w>mainactivity</w>
+      <w>signedout</w>
+      <w>signin</w>
     </words>
   </dictionary>
 </component>
