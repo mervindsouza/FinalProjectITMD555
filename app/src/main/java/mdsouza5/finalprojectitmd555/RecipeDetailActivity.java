@@ -127,9 +127,13 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
                 User user = dataSnapshot.getValue(User.class);
                 String authorName = user.userName;
 
-                // Commment create object
+                // Comment create object
                 String commentText = fpCommentField.getText().toString();
                 Comment comment = new Comment(userId, authorName, commentText);
+
+                fpDBReferenceForComments.push().setValue(comment);
+
+                fpCommentField.setText(null);
             }
 
             @Override
