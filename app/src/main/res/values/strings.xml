@@ -18,4 +18,5 @@
     <string name="heading_my_recipes">My Recipes</string>
     <string name="heading_my_top_recipes">My Top Recipes</string>
     <string name="menu_logout">Log Out</string>
+    <string name="hint_email">example@example.com</string>
 </resources>

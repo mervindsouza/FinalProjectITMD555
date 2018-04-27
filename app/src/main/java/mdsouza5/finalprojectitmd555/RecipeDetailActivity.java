@@ -3,7 +3,6 @@ package mdsouza5.finalprojectitmd555;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -48,7 +47,7 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
     private RecyclerView fpCommentsRecycler;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
@@ -80,10 +79,11 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get the Recipe Object and update UI based on values
-                Recipes recipe = dataSnapshot.getValue(Recipes.class);
-                fpAuthorView.setText(recipe.recipeAuthor);
-                fpTitleView.setText(recipe.recipeTitle);
-                fpBodyView.setText(recipe.recipeBody);
+                Recipes recipes = dataSnapshot.getValue(Recipes.class);
+
+                fpAuthorView.setText(recipes.recipeAuthor);
+                fpTitleView.setText(recipes.recipeTitle);
+                fpBodyView.setText(recipes.recipeBody);
             }
 
             @Override

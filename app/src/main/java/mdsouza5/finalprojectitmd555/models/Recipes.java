@@ -8,7 +8,7 @@ import java.util.Map;
 
 @IgnoreExtraProperties
 public class Recipes {
-    public String userId;
+    public String uid;
     public String recipeAuthor;
     public String recipeTitle;
     public String recipeBody;
@@ -18,8 +18,8 @@ public class Recipes {
     public Recipes() {
     }
 
-    public Recipes(String userId, String recipeAuthor, String recipeTitle, String recipeBody) {
-        this.userId = userId;
+    public Recipes(String uid, String recipeAuthor, String recipeTitle, String recipeBody) {
+        this.uid = uid;
         this.recipeAuthor = recipeAuthor;
         this.recipeTitle = recipeTitle;
         this.recipeBody = recipeBody;
@@ -29,10 +29,11 @@ public class Recipes {
     @Exclude
     public Map<String, Object> ToMap() {
         HashMap<String, Object> stars = new HashMap<>();
-        stars.put("userId", userId);
+        stars.put("uid", uid);
         stars.put("recipeAuthor", recipeAuthor);
         stars.put("recipeTitle", recipeTitle);
         stars.put("recipeBody", recipeBody);
+
         return stars;
     }
 }

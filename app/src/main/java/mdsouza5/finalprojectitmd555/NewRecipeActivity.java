@@ -71,8 +71,7 @@ public class NewRecipeActivity extends BaseActivity {
         SetEditingEnabled(false);
         Toast.makeText(this, "Adding Your Recipe...", Toast.LENGTH_SHORT).show();
 
-        //final String userId = GetFirebaseUserId();
-        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String userId = GetFirebaseUserId();
         fpDatabaseReference.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

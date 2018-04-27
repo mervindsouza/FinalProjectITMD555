@@ -97,7 +97,7 @@ public abstract class RecipeListFragment extends Fragment {
                     @Override
                     public void onClick(View starView) {
                         DatabaseReference globalRecipeReference = fpDatabase.child("recipes").child(recipeReference.getKey());
-                        DatabaseReference userRecipeReference = fpDatabase.child("user-recipes").child(model.userId).child(recipeReference.getKey());
+                        DatabaseReference userRecipeReference = fpDatabase.child("user-recipes").child(model.uid).child(recipeReference.getKey());
 
                         onStarClickedByUser(globalRecipeReference);
                         onStarClickedByUser(userRecipeReference);
@@ -119,10 +119,10 @@ public abstract class RecipeListFragment extends Fragment {
                 }
 
                 if (recipesObj.starsForRecipes.containsKey(GetUid())) {
-                    recipesObj.starredRecipesCount -= recipesObj.starredRecipesCount;
+                    recipesObj.starredRecipesCount = recipesObj.starredRecipesCount - 1;
                     recipesObj.starsForRecipes.remove(GetUid());
                 } else {
-                    recipesObj.starredRecipesCount += recipesObj.starredRecipesCount;
+                    recipesObj.starredRecipesCount = recipesObj.starredRecipesCount + 1;
                     recipesObj.starsForRecipes.put(GetUid(), true);
                 }
 
@@ -132,7 +132,7 @@ public abstract class RecipeListFragment extends Fragment {
 
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-                Log.d(LOGTAG, "recipeTransaction:onComplete" + databaseError);
+                Log.d(LOGTAG, "recipeTransaction:onComplete " + databaseError);
             }
         });
     }
