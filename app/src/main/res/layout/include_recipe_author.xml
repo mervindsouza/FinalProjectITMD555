@@ -19,6 +19,4 @@
         android:layout_marginLeft="@dimen/ten_dp_padding"
         android:gravity="center_vertical"
         tools:text="someauthor@email.com" />
-
-
 </LinearLayout>

@@ -5,16 +5,16 @@ import com.google.firebase.database.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class Comment {
 
-    public String userId;
-    public String recipeAuthor;
+    public String uid;
+    public String commentAuthor;
     public String recipeComment;
 
     public Comment() {
     }
 
-    public Comment(String userId, String recipeAuthor, String recipeComment) {
-        this.userId = userId;
-        this.recipeAuthor = recipeAuthor;
+    public Comment(String uid, String commentAuthor, String recipeComment) {
+        this.uid = uid;
+        this.commentAuthor = commentAuthor;
         this.recipeComment = recipeComment;
     }
 }

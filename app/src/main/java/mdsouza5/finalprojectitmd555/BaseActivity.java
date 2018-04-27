@@ -10,7 +10,6 @@ public class BaseActivity extends AppCompatActivity {
     private static final String LOGTAG = "BaseActivity";
 
     public String GetFirebaseUserId() {
-        Log.d(LOGTAG, FirebaseAuth.getInstance().getCurrentUser().getEmail());
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 }

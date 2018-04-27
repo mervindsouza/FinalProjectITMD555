@@ -28,11 +28,11 @@ public class RecipeViewHolder extends RecyclerView.ViewHolder {
     }
 
     //Binding RecipeViewHolder to Recipe Model
-    public void BindingToRecipe(Recipes recipeObj, View.OnClickListener starsClickListener) {
-        recipeTitleTextView.setText(recipeObj.recipeTitle);
-        recipeAuthorTextView.setText(recipeObj.recipeAuthor);
-        recipeStarCountTextView.setText(String.valueOf(recipeObj.starredRecipesCount));
-        recipeBodyTextView.setText(recipeObj.recipeBody);
+    public void BindingToRecipe(Recipes recipes, View.OnClickListener starsClickListener) {
+        recipeTitleTextView.setText(recipes.recipeTitle);
+        recipeAuthorTextView.setText(recipes.recipeAuthor);
+        recipeStarCountTextView.setText(String.valueOf(recipes.starredRecipesCount));
+        recipeBodyTextView.setText(recipes.recipeBody);
 
         recipeStarsImageView.setOnClickListener(starsClickListener);
     }

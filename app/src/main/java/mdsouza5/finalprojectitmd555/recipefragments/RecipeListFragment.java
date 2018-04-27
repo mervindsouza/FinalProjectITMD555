@@ -1,7 +1,5 @@
 package mdsouza5.finalprojectitmd555.recipefragments;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,17 +42,19 @@ public abstract class RecipeListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View fpRootView = inflater.inflate(mdsouza5.finalprojectitmd555.R.layout.fragment_all_recipes, container, false);
+        View fpRootView = inflater.inflate(R.layout.fragment_all_recipes, container, false);
 
         fpDatabase = FirebaseDatabase.getInstance().getReference();
-        fpRecycler = fpRootView.findViewById(mdsouza5.finalprojectitmd555.R.id.list_of_messages);
+
+        fpRecycler = fpRootView.findViewById(R.id.list_of_messages);
+
         fpRecycler.setHasFixedSize(true);
 
         return fpRootView;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         fpLinearLayoutManager = new LinearLayoutManager(getActivity());
@@ -64,13 +64,15 @@ public abstract class RecipeListFragment extends Fragment {
 
         Query recipeQuery = GetQuery(fpDatabase);
 
-        FirebaseRecyclerOptions fpOptions = new FirebaseRecyclerOptions.Builder<Recipes>().setQuery(recipeQuery, Recipes.class).build();
+        FirebaseRecyclerOptions fpOptions = new FirebaseRecyclerOptions.Builder<Recipes>().
+                setQuery(recipeQuery, Recipes.class).build();
 
         fpAdapter = new FirebaseRecyclerAdapter<Recipes, RecipeViewHolder>(fpOptions) {
             @Override
-            public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public RecipeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 LayoutInflater fpLayoutInflater = LayoutInflater.from(parent.getContext());
-                return new RecipeViewHolder(fpLayoutInflater.inflate(mdsouza5.finalprojectitmd555.R.layout.item_recipe, parent, false));
+
+                return new RecipeViewHolder(fpLayoutInflater.inflate(R.layout.item_recipe, parent, false));
             }
 
             @Override
@@ -140,7 +142,7 @@ public abstract class RecipeListFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if(fpAdapter!=null){
+        if (fpAdapter != null) {
             fpAdapter.startListening();
         }
     }
@@ -148,7 +150,7 @@ public abstract class RecipeListFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        if(fpAdapter!=null){
+        if (fpAdapter != null) {
             fpAdapter.stopListening();
         }
     }

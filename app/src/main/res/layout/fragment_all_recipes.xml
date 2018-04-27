@@ -3,15 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-    <!--Add layout_alignparenttop = true-->
+    tools:context=".ShowPagesActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_of_messages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="true"
+        android:layout_alignParentTop="true"
+        android:clipToPadding="false"
         android:padding="@dimen/five_dp_padding"
         android:scrollbars="vertical"
         tools:listitem="@layout/item_recipe" />

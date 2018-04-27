@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/recipe_comment_photo"
+        android:id="@+id/comment_photo"
         android:layout_width="@dimen/thritytwo_dp_wh"
         android:layout_height="@dimen/thritytwo_dp_wh"
         android:layout_centerVertical="true"
@@ -15,19 +15,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/ten_dp_padding"
-        android:layout_toRightOf="@id/recipe_comment_photo"
+        android:layout_toRightOf="@id/comment_photo"
         android:orientation="vertical"
         android:padding="@dimen/five_dp_padding">
 
         <TextView
-            android:id="@+id/recipe_comment_author"
+            android:id="@+id/comment_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
             tools:text="Johnny Walker" />
 
         <TextView
-            android:id="@+id/recipe_comment_body"
+            android:id="@+id/comment_body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="This is a Sample Comment!" />

@@ -10,7 +10,9 @@ public class MyTopRecipesFragment extends RecipeListFragment {
 
     @Override
     public Query GetQuery(DatabaseReference databaseReference) {
-        Query topRecipesQuery = databaseReference.child("user-recipes").child(GetUid()).orderByChild("starCount");
+        String myUserId = GetUid();
+
+        Query topRecipesQuery = databaseReference.child("user-recipes").child(myUserId).orderByChild("starredRecipesCount");
         return topRecipesQuery;
     }
 }

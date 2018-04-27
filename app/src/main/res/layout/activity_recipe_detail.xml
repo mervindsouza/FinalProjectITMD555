@@ -10,6 +10,13 @@
     tools:context=".RecipeDetailActivity">
 
     <include
+    android:id="@+id/recipe_author_layout"
+    layout="@layout/include_recipe_author"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true" />
+
+    <include
         android:id="@+id/recipe_text_layout"
         layout="@layout/include_recipe_text"
         android:layout_width="wrap_content"

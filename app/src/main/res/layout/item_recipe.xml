@@ -34,7 +34,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/ten_dp_padding"
                 android:layout_marginRight="@dimen/five_dp_padding"
-                android:background="?attr/selectableItemBackground"
                 android:src="@drawable/star_outline" />
 
             <TextView

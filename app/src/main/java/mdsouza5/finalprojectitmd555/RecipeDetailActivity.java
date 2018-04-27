@@ -36,7 +36,7 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
     private DatabaseReference fpDBReferenceForRecipe;
     private DatabaseReference fpDBReferenceForComments;
     private ValueEventListener fpRecipeListener;
-    private String fpRecipeKey;
+    private String recipeKey;
     private CommentAdapter fpCommentAdapter;
 
     private TextView fpAuthorView;
@@ -51,17 +51,20 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
-        fpRecipeKey = getIntent().getStringExtra(EXTRA_RECIPE_KEY);
-        if(fpRecipeKey == null){
+        recipeKey = getIntent().getStringExtra(EXTRA_RECIPE_KEY);
+        if (recipeKey == null) {
             throw new IllegalArgumentException("EXTRA_RECIPE_KEY Must be passed.");
         }
 
-        fpDBReferenceForRecipe = FirebaseDatabase.getInstance().getReference().child("recipes").child("fpRecipeKey");
-        fpDBReferenceForComments = FirebaseDatabase.getInstance().getReference().child("recipe-comments").child("fpRecipeKey");
+        fpDBReferenceForRecipe = FirebaseDatabase.getInstance().
+                getReference().child("recipes").child(recipeKey);
+        fpDBReferenceForComments = FirebaseDatabase.getInstance().
+                getReference().child("recipe-comments").child(recipeKey);
 
-        fpAuthorView = findViewById(R.id.recipe_comment_author);
+        fpAuthorView = findViewById(R.id.recipe_author);
         fpTitleView = findViewById(R.id.recipe_title);
         fpBodyView = findViewById(R.id.recipe_body);
+
         fpCommentField = findViewById(R.id.field_recipe_comment);
         fpCommentButton = findViewById(R.id.button_recipe_comment);
         fpCommentsRecycler = findViewById(R.id.recycler_recipe_comments);
@@ -74,13 +77,12 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
     protected void onStart() {
         super.onStart();
 
-        // Adding value to the event listener
+
         ValueEventListener recipeValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get the Recipe Object and update UI based on values
-                Recipes recipes = dataSnapshot.getValue(Recipes.class);
 
+                Recipes recipes = dataSnapshot.getValue(Recipes.class);
                 fpAuthorView.setText(recipes.recipeAuthor);
                 fpTitleView.setText(recipes.recipeTitle);
                 fpBodyView.setText(recipes.recipeBody);
@@ -89,7 +91,7 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // If recipe isn't obtained, Log a error message
-                Log.w(LOGTAG,"loadRecipe:onCancelled", databaseError.toException());
+                Log.w(LOGTAG, "loadRecipe:onCancelled", databaseError.toException());
                 Toast.makeText(RecipeDetailActivity.this, "Failed To Load Recipe. Try Later.", Toast.LENGTH_SHORT).show();
             }
         };
@@ -104,7 +106,7 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onStop() {
         super.onStop();
-        if(fpRecipeListener!=null){
+        if (fpRecipeListener != null) {
             fpDBReferenceForRecipe.removeEventListener(fpRecipeListener);
         }
 
@@ -114,45 +116,45 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         int k = v.getId();
-        if(k == R.id.button_recipe_comment){
+        if (k == R.id.button_recipe_comment) {
             PostComment();
         }
     }
 
-    private void PostComment(){
-        final String userId = GetFirebaseUserId();
-        FirebaseDatabase.getInstance().getReference().child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                String authorName = user.userName;
+    private void PostComment() {
+        final String uid = GetFirebaseUserId();
+        FirebaseDatabase.getInstance().getReference().child("users").child(uid).
+                addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+                        String authorName = user.userName;
 
-                // Comment create object
-                String commentText = fpCommentField.getText().toString();
-                Comment comment = new Comment(userId, authorName, commentText);
+                        String commentText = fpCommentField.getText().toString();
+                        Comment comment = new Comment(uid, authorName, commentText);
 
-                fpDBReferenceForComments.push().setValue(comment);
+                        fpDBReferenceForComments.push().setValue(comment);
 
-                fpCommentField.setText(null);
-            }
+                        fpCommentField.setText(null);
+                    }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                    }
+                });
     }
-
 
     private static class CommentViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView recipeAuthorView;
-        public TextView recipeBodyView;
+        public TextView commentAuthorView;
+        public TextView commentBodyView;
 
         public CommentViewHolder(View itemView) {
             super(itemView);
-            recipeAuthorView = itemView.findViewById(R.id.recipe_comment_author);
-            recipeBodyView = itemView.findViewById(R.id.recipe_comment_body);
+
+            commentAuthorView = itemView.findViewById(R.id.comment_author);
+            commentBodyView = itemView.findViewById(R.id.comment_body);
         }
     }
 
@@ -164,9 +166,9 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
         private List<String> fpCommentIds = new ArrayList<>();
         private List<Comment> fpComments = new ArrayList<>();
 
-        public CommentAdapter(final Context fpContext, DatabaseReference fpDatabaseReference) {
+        public CommentAdapter(final Context fpContext, DatabaseReference ref) {
             this.fpContext = fpContext;
-            this.fpDatabaseReference = fpDatabaseReference;
+            this.fpDatabaseReference = ref;
 
             ChildEventListener childEventListener = new ChildEventListener() {
                 @Override
@@ -174,6 +176,7 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
                     Log.d(LOGTAG, "onChildAdded:" + dataSnapshot.getKey());
 
                     Comment comment = dataSnapshot.getValue(Comment.class);
+
                     fpCommentIds.add(dataSnapshot.getKey());
                     fpComments.add(comment);
                     notifyItemInserted(fpCommentIds.size() - 1);
@@ -184,12 +187,13 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
                     Log.d(LOGTAG, "onChildChanged:" + dataSnapshot.getKey());
                     // If the comment is changed, we compare with the key if we are displaying the right comment or not
                     // If it is changed, show the updated comment
-                    Comment comment = dataSnapshot.getValue(Comment.class);
+                    Comment newComment = dataSnapshot.getValue(Comment.class);
                     String commentKey = dataSnapshot.getKey();
 
                     int commentIndex = fpCommentIds.indexOf(commentKey);
                     if (commentIndex > -1) {
-                        fpComments.set(commentIndex, comment);
+                        fpComments.set(commentIndex, newComment);
+                        notifyItemChanged(commentIndex);
                     } else {
                         Log.w(LOGTAG, "onChildChanged:unknown_child:" + commentKey);
                     }
@@ -203,6 +207,7 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
                     String commentKey = dataSnapshot.getKey();
 
                     int commentIndex = fpCommentIds.indexOf(commentKey);
+
                     if (commentIndex > -1) {
                         fpCommentIds.remove(commentIndex);
                         fpComments.remove(commentIndex);
@@ -230,7 +235,7 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
                     Toast.makeText(fpContext, "Failed to load comments.", Toast.LENGTH_SHORT).show();
                 }
             };
-            fpDatabaseReference.addChildEventListener(childEventListener);
+            ref.addChildEventListener(childEventListener);
 
             // Store reference to listener so it can be removed when app is stopped
             fpChildEventListener = childEventListener;
@@ -238,7 +243,7 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
 
         @NonNull
         @Override
-        public CommentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public CommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(fpContext);
             View view = layoutInflater.inflate(R.layout.item_comment, parent, false);
             return new CommentViewHolder(view);
@@ -247,6 +252,8 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
         @Override
         public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
             Comment comment = fpComments.get(position);
+            holder.commentAuthorView.setText(comment.commentAuthor);
+            holder.commentBodyView.setText(comment.recipeComment);
         }
 
         @Override

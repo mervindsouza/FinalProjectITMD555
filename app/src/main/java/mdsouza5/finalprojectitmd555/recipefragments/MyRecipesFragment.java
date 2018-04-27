@@ -10,8 +10,6 @@ public class MyRecipesFragment extends RecipeListFragment {
 
     @Override
     public Query GetQuery(DatabaseReference databaseReference) {
-        //FirebaseAuth.getInstance().getCurrentUser().getUid()
-        //return databaseReference.child("user-recipes").child(GetUid());
-        return databaseReference.child("user-recipes").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        return databaseReference.child("user-recipes").child(GetUid());
     }
 }

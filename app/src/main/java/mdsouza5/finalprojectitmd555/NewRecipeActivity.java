@@ -107,16 +107,16 @@ public class NewRecipeActivity extends BaseActivity {
         }
     }
 
-    private void WriteNewRecipe(String userId, String userName, String recipeTitle, String recipeBody) {
+    private void WriteNewRecipe(String uid, String userName, String recipeTitle, String recipeBody) {
         //Create new recipe at /user-recipes/$userid/$recipeid and at
         // /recipes/$recipeid simultaneously
         String key = fpDatabaseReference.child("recipes").push().getKey();
-        Recipes recipe = new Recipes(userId, userName, recipeTitle, recipeBody);
+        Recipes recipe = new Recipes(uid, userName, recipeTitle, recipeBody);
         Map<String, Object> recipeValues = recipe.ToMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/recipes/" + key, recipeValues);
-        childUpdates.put("/user-recipes/" + userId + "/" + key, recipeValues);
+        childUpdates.put("recipes/" + key, recipeValues);
+        childUpdates.put("user-recipes/" + uid + "/" + key, recipeValues);
 
         fpDatabaseReference.updateChildren(childUpdates);
     }
