@@ -13,10 +13,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApiNotAvailableException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,6 +38,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private EditText fpPasswordField;
     private Button fpSignInButton;
     private Button fpSignUpButton;
+    private TextView fpMainStatus;
+    private boolean isEmailSent = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +53,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         fpPasswordField = findViewById(R.id.field_password);
         fpSignInButton = findViewById(R.id.button_sign_in);
         fpSignUpButton = findViewById(R.id.button_sign_up);
+        fpMainStatus = findViewById(R.id.mainstatus);
 
         fpSignInButton.setOnClickListener(this);
         fpSignUpButton.setOnClickListener(this);
@@ -103,11 +108,37 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
                         if (task.isSuccessful()) {
                             onAuthSuccess(task.getResult().getUser());
+
+                            //Send Email Verification Here
+                            boolean isVerificationEmailSent = sendmailVerification(fpAuth.getCurrentUser());
+                            if (!isVerificationEmailSent) {
+                                sendmailVerification(fpAuth.getCurrentUser());
+                            }
+
                         } else {
                             Toast.makeText(SignInActivity.this, "Sign Up Failed", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    private boolean sendmailVerification(FirebaseUser user) {
+
+        user.sendEmailVerification().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    fpMainStatus.setText(R.string.email_verification_success_notify);
+                    findViewById(R.id.mainstatus).setVisibility(View.VISIBLE);
+                    Toast.makeText(SignInActivity.this, R.string.email_verification_success_notify, Toast.LENGTH_LONG).show();
+                    isEmailSent = true;
+                } else {
+                    Toast.makeText(SignInActivity.this, R.string.email_verification_failure_notify, Toast.LENGTH_LONG).show();
+                    isEmailSent = false;
+                }
+            }
+        });
+        return isEmailSent;
     }
 
     private boolean validateForm() {
@@ -126,7 +157,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             fpPasswordField.setError(null);
         }
 
-        return true;
+        return isValid;
     }
 
     private void onAuthSuccess(FirebaseUser firebaseUser) {
@@ -134,8 +165,14 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
         writeNewUser(firebaseUser.getUid(), userName, firebaseUser.getEmail());
 
-        startActivity(new Intent(SignInActivity.this, ShowPagesActivity.class));
-        finish();
+        //check is email has been verified; if yes then allow or else error
+        if (!firebaseUser.isEmailVerified()) {
+            Toast.makeText(SignInActivity.this, "Please Verify Your Email.", Toast.LENGTH_LONG).show();
+            findViewById(R.id.button_sign_up).setEnabled(false);
+        } else {
+            startActivity(new Intent(SignInActivity.this, ShowPagesActivity.class));
+            finish();
+        }
     }
 
     public void writeNewUser(String uid, String userName, String email) {

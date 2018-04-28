@@ -25,6 +25,20 @@
             android:contentDescription="@string/app_name"
             android:src="@drawable/restaurant_menu" />
 
+        <TextView
+        android:id="@+id/maintitletext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/bottom_margin_title"
+        android:text="@string/mainactivity_signin_text" />
+
+        <TextView
+        android:id="@+id/mainstatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mainactivity_signedout_text"
+            android:visibility="invisible"/>
+
     </LinearLayout>
 
     <RelativeLayout
