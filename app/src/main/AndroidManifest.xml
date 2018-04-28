@@ -4,8 +4,8 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/icons8_food_service_48"
-        android:label="@string/app_name"
+        android:icon="@mipmap/icons8_ingredients_48"
+        android:label="FPITMD"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">

@@ -23,7 +23,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/sixteen_dp_margin"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/restaurant_menu" />
+            android:src="@drawable/restaurant_menu_100" />
 
         <TextView
         android:id="@+id/maintitletext"
