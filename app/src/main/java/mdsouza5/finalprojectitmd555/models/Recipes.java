@@ -6,6 +6,11 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Recipe class which provides a model for user recipes
+ * @author merv
+ */
+
 @IgnoreExtraProperties
 public class Recipes {
     public String uid;
@@ -25,7 +30,10 @@ public class Recipes {
         this.recipeBody = recipeBody;
     }
 
-    //Map Recipes to a HashMap
+    /**
+     * This function returns the HashMap with the values to be persisted to firebase
+     * @return hashmap for a user, recipe author, recipe title and recipe body
+     */
     @Exclude
     public Map<String, Object> ToMap() {
         HashMap<String, Object> stars = new HashMap<>();

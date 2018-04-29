@@ -2,6 +2,11 @@ package mdsouza5.finalprojectitmd555.models;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+/**
+ * Comment class which provides a model for user comments on recipes
+ * @author merv
+ */
+
 @IgnoreExtraProperties
 public class Comment {
 
