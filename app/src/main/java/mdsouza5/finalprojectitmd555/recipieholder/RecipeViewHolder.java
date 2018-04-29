@@ -8,7 +8,16 @@ import android.widget.TextView;
 import mdsouza5.finalprojectitmd555.R;
 import mdsouza5.finalprojectitmd555.models.Recipes;
 
+/*
+* RecipeViewHolder holds all the recipes posted by the Users
+* used for iteration for all the recipes for all the users
+*/
+
 public class RecipeViewHolder extends RecyclerView.ViewHolder {
+
+    // **************************************************
+    // Fields
+    // **************************************************
 
     public TextView recipeTitleTextView;
     public TextView recipeAuthorTextView;
@@ -27,7 +36,10 @@ public class RecipeViewHolder extends RecyclerView.ViewHolder {
         recipeBodyTextView = itemView.findViewById(R.id.recipe_body);
     }
 
-    //Binding RecipeViewHolder to Recipe Model
+    /*
+    * Function @return the view id if a star is clicked or not
+    * binds the items to their individual components
+    * */
     public void BindingToRecipe(Recipes recipes, View.OnClickListener starsClickListener) {
         recipeTitleTextView.setText(recipes.recipeTitle);
         recipeAuthorTextView.setText(recipes.recipeAuthor);
