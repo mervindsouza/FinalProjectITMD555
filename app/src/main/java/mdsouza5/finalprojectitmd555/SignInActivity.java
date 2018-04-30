@@ -27,7 +27,14 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import mdsouza5.finalprojectitmd555.models.User;
 
+/*
+ *First Activity to be shown to the user.
+ *Contains functionality to signin and signup users to post their recipes
+ * */
+
 public class SignInActivity extends BaseActivity implements View.OnClickListener {
+
+    //Private Fields
 
     private static final String LOGTAG = "SignInActivity";
 
@@ -67,6 +74,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
+    /*
+    * SignIn function performs task of logging in users successfully if they enter the correct username and password
+    * */
+
     private void signIn() {
         Log.d(LOGTAG, "signIn");
         if (!validateForm()) {
@@ -90,6 +101,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     }
                 });
     }
+
+    /*
+     * Signup function performs task of creating a user based on entered username and password
+     * */
 
     private void signUp() {
         Log.d(LOGTAG, "signUp");
@@ -122,6 +137,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 });
     }
 
+    /*
+     * Function sends email verification to the user when a user creates a new account.
+     * */
+
     private boolean sendmailVerification(FirebaseUser user) {
 
         user.sendEmailVerification().addOnCompleteListener(this, new OnCompleteListener<Void>() {
@@ -141,6 +160,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         return isEmailSent;
     }
 
+    /*
+     * validation function which validates form fields for email and password
+     * */
     private boolean validateForm() {
         boolean isValid = true;
         if (TextUtils.isEmpty(fpEmailField.getText().toString())) {
@@ -160,6 +182,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         return isValid;
     }
 
+    // On authentication success for user, show notifications
+    // on failure show notifications
+
     private void onAuthSuccess(FirebaseUser firebaseUser) {
         String userName = userNameFromEmail(firebaseUser.getEmail());
 
@@ -175,10 +200,18 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
+    /*
+    * Function Writes new user to the database
+    * */
+
     public void writeNewUser(String uid, String userName, String email) {
         User user = new User(userName, email);
         fpDatabase.child("users").child(uid).setValue(user);
     }
+
+    /*
+    * creates username from the entered email address
+    * */
 
     private String userNameFromEmail(String email) {
         if (email.contains("@")) {

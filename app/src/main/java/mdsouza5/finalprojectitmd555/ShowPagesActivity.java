@@ -25,7 +25,16 @@ import mdsouza5.finalprojectitmd555.recipefragments.MyRecipesFragment;
 import mdsouza5.finalprojectitmd555.recipefragments.MyTopRecipesFragment;
 import mdsouza5.finalprojectitmd555.recipefragments.RecentRecipesFragment;
 
+/*
+* This class contains for the menu and add new recipe button which allows for the users to add new recipes.
+* */
+
 public class ShowPagesActivity extends BaseActivity {
+
+    /*
+    * Fields for Views and menus
+    * */
+
     private static final String LOGTAG = "ShowPagesActivity";
     private FragmentPagerAdapter fragmentPagerAdapter;
     private ViewPager viewPager;

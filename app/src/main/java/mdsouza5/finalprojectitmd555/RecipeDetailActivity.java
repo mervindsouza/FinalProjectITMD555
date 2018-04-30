@@ -28,6 +28,12 @@ import mdsouza5.finalprojectitmd555.models.Comment;
 import mdsouza5.finalprojectitmd555.models.Recipes;
 import mdsouza5.finalprojectitmd555.models.User;
 
+/**
+ * This class shows the comments and the details of the recipes based
+ * on the details added by the user
+ * whenever each recipe is clicked, it's details are shown to the user
+ * */
+
 public class RecipeDetailActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String EXTRA_RECIPE_KEY = "recipe_key";
@@ -121,6 +127,7 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
+    // This function when called posts the comments for the user on the recipe selected by the user
     private void PostComment() {
         final String uid = GetFirebaseUserId();
         FirebaseDatabase.getInstance().getReference().child("users").child(uid).
@@ -145,6 +152,7 @@ public class RecipeDetailActivity extends BaseActivity implements View.OnClickLi
                 });
     }
 
+    // View holder for the comments which takes in all the comments and shows them on the recipe
     private static class CommentViewHolder extends RecyclerView.ViewHolder {
 
         public TextView commentAuthorView;

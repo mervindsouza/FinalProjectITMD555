@@ -22,7 +22,13 @@ import java.util.Map;
 import mdsouza5.finalprojectitmd555.models.Recipes;
 import mdsouza5.finalprojectitmd555.models.User;
 
+/*
+This class enables writing of the recipes for the users
+*/
+
 public class NewRecipeActivity extends BaseActivity {
+
+    // fields for the recipe
 
     private static final String LOGTAG = "NewRecipeActivity";
     private static final String REQUIRED_FIELD = "Required";
@@ -53,6 +59,9 @@ public class NewRecipeActivity extends BaseActivity {
             }
         });
     }
+
+    // This function gets the values from the fields for the recipes
+//    and writes the new recipe to database
 
     private void SubmitRecipe() {
         final String recipeTitle = fpRecipeTitleField.getText().toString();
@@ -107,6 +116,8 @@ public class NewRecipeActivity extends BaseActivity {
         }
     }
 
+    // This function writes the new recipe to the database
+    // Hashmap which takes the object and updates the children for the intended database
     private void WriteNewRecipe(String uid, String userName, String recipeTitle, String recipeBody) {
         //Create new recipe at /user-recipes/$userid/$recipeid and at
         // /recipes/$recipeid simultaneously
