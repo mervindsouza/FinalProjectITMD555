@@ -193,7 +193,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         //check is email has been verified; if yes then allow or else error
         if (!firebaseUser.isEmailVerified()) {
             Toast.makeText(SignInActivity.this, "Please Verify Your Email.", Toast.LENGTH_LONG).show();
-            findViewById(R.id.button_sign_up).setEnabled(false);
+            //findViewById(R.id.button_sign_up).setEnabled(false);
         } else {
             startActivity(new Intent(SignInActivity.this, ShowPagesActivity.class));
             finish();
