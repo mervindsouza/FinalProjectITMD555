@@ -34,4 +34,4 @@ __Previous Comments on Recipes:__
 
 __Log out from App:__
 
-![Log out from App](/images/Screenshot_20180429-224712.png) 
+![Log out from App](/images/Screenshot_20180429-221005.png) 
